@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin — VITOOSH ARTWORKS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body{font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:#fff;color:#111;margin:0}
+    .wrap{max-width:880px;margin:36px auto;padding:28px}
+    h1{margin:0 0 8px;font-size:22px;letter-spacing:2px}
+    p{color:#6b6b6b}
+    .note{margin-top:18px;padding:12px;border-radius:8px;background:#fbfbfb;border:1px solid #f0f0f0}
+    .cms-root{margin-top:18px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>VITOOSH ARTWORKS — Admin</h1>
+    <p class="muted">Use this page to sign in and edit site content. You’ll be redirected to Netlify CMS.</p>
+    <div class="note">
+      <strong>Instructions:</strong>
+      <ol>
+        <li>Deploy the repo to Netlify and enable Identity + Git Gateway (see README below).</li>
+        <li>Open the "CMS" link to sign in with GitHub and edit About, Contact, or upload artworks.</li>
+      </ol>
+    </div>
+    <div style="margin-top:18px">
+      <a href="/admin/index.html#CMS" onclick="window.location='/admin/';return false;" style="text-decoration:none">
+        <button style="padding:10px 16px;border-radius:8px;border:1px solid #e6e6e6;background:#fff;cursor:pointer;font-weight:600">Open CMS</button>
+      </a>
+    </div>
+
+    <!-- Netlify CMS -->
+    <div class="cms-root" id="ncms"></div>
+
+    <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
+    <script>
+      // Netlify CMS will auto-initialize reading /admin/config.yml
+      // This page is intentionally minimal and matches your site's light aesthetic.
+    </script>
+  </div>
+</body>
+</html>
