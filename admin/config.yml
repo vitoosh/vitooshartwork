@@ -1,0 +1,40 @@
+backend:
+  name: github
+  repo: vitoosh/vitooshartwork # your repo
+  branch: main
+  auth_type: implicit
+
+media_folder: "images" # where uploaded images will go
+public_folder: "/images"
+
+collections:
+  - name: "about"
+    label: "About"
+    files:
+      - file: "content/about.md"
+        label: "About page"
+        name: "about"
+        fields:
+          - {label: "Title", name: "title", widget: "string"}
+          - {label: "Body", name: "body", widget: "markdown"}
+
+  - name: "contact"
+    label: "Contact"
+    files:
+      - file: "content/contact.md"
+        label: "Contact page"
+        name: "contact"
+        fields:
+          - {label: "Title", name: "title", widget: "string"}
+          - {label: "Body", name: "body", widget: "markdown"}
+
+  - name: "artworks"
+    label: "Artworks"
+    folder: "content/artworks"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Image", name: "image", widget: "image", required: true}
+      - {label: "Caption", name: "caption", widget: "string", required: false}
+      - {label: "Publish", name: "publish", widget: "boolean", default: true}
