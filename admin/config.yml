@@ -1,6 +1,6 @@
 backend:
   name: git-gateway
-  branch: main  # or 'master' if that’s your default branch
+  branch: main
 
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
@@ -17,4 +17,4 @@ collections:
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Image", name: "image", widget: "image" }
-      - { label: "Description", name: "body", widget: "markdown" }
+      - { label: "Description", name: "description", widget: "text", required: false }
