@@ -1,43 +1,163 @@
 <!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>VITOOSH ARTWORKS – Admin</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <style>
-      body {
-        margin: 0;
-        font-family: 'Inter', sans-serif;
-        background: #fafafa;
-        color: #111;
-      }
-      header {
-        padding: 16px 24px;
-        background: #fff;
-        border-bottom: 1px solid #eaeaea;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      header h1 {
-        font-size: 18px;
-        font-weight: 700;
-        letter-spacing: 1px;
-      }
-      .cms-container {
-        padding: 24px;
-      }
-    </style>
-  </head>
-  <body>
-    <header>
-      <h1>VITOOSH ARTWORKS – Admin Panel</h1>
-      <a href="/" style="font-size:14px; color:#666; text-decoration:none;">← Back to site</a>
-    </header>
-    <div class="cms-container">
-      <!-- Netlify CMS will load here -->
-      <script src="https://unpkg.com/netlify-cms-app@^3.0.0/dist/netlify-cms.js"></script>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>VITOOSH ARTWORKS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <meta name="description" content="VITOOSH ARTWORKS — portfolio gallery">
+  <style>
+    :root{--bg:#ffffff;--muted:#6b6b6b;--text:#111111;--accent:#000;--max-width:1200px}
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;line-height:1.45}
+    header{border-bottom:1px solid #eee;background:transparent;position:sticky;top:0;z-index:40;backdrop-filter: blur(6px)}
+    .container{max-width:var(--max-width);margin:0 auto;padding:28px 20px}
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:24px}
+    .brand{font-weight:700;letter-spacing:2px;font-size:18px}
+    .navlinks{display:flex;gap:18px;align-items:center}
+    .navlinks a{font-size:13px;color:var(--muted);text-decoration:none;letter-spacing:1px}
+    .navlinks a:hover{color:var(--text)}
+    .hero{padding:48px 0 24px}
+    .hero-inner{display:flex;gap:28px;align-items:center;justify-content:space-between}
+    .hero-text{max-width:640px}
+    .hero h1{margin:0;font-size:40px;letter-spacing:2px}
+    .hero p{color:var(--muted);margin-top:12px}
+    .gallery-wrap{padding:24px 0 20px}
+    .gallery{column-count:3;column-gap:18px}
+    .item{display:inline-block;width:100%;margin:0 0 18px;break-inside:avoid}
+    .item img{width:100%;height:auto;display:block;border-radius:6px;box-shadow:0 6px 20px rgba(20,20,20,0.06);transition:transform .28s ease, box-shadow .28s ease}
+    .item img:hover{transform:translateY(-4px);box-shadow:0 14px 40px rgba(20,20,20,0.08)}
+    @media (max-width:1000px){.gallery{column-count:2}}@media (max-width:640px){.gallery{column-count:1}}
+    footer{padding:36px 0;border-top:1px solid #eee;color:var(--muted)}
+    .lightbox{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.72);z-index:1000}
+    .lightbox.open{display:flex}.lightbox-content{max-width:92vw;max-height:90vh;position:relative;display:flex;align-items:center;justify-content:center}.lightbox img{max-width:100%;max-height:100%;border-radius:6px}.lb-close{position:absolute;top:12px;right:12px;background:transparent;border:0;color:#fff;font-size:26px;cursor:pointer}.lb-arrow{position:absolute;top:50%;transform:translateY(-50%);background:transparent;border:0;color:#fff;font-size:40px;cursor:pointer;padding:12px}.lb-prev{left:10px}.lb-next{right:10px}.lb-caption{position:absolute;left:50%;transform:translateX(-50%);bottom:8px;color:#fff;font-size:13px;opacity:0.95}
+    .more-wrap{text-align:center;margin-top:12px}.btn{display:inline-block;padding:10px 18px;border-radius:8px;border:1px solid #e6e6e6;background:#fff;cursor:pointer;font-weight:600}
+    .muted{color:var(--muted);font-size:14px}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand">VITOOSH ARTWORKS</div>
+      <nav class="navlinks" aria-label="Main navigation">
+        <a href="#home">Home</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#instagram">From Instagram</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+        <a href="/admin/">Admin</a>
+      </nav>
     </div>
-  </body>
+  </header>
+
+  <main class="container">
+    <section id="home" class="hero">
+      <div class="hero-inner">
+        <div class="hero-text">
+          <h1>VITOOSH ARTWORKS</h1>
+          <p class="muted">A minimal portfolio to showcase visual artwork. Curated gallery plus an auto-updating Instagram preview.</p>
+        </div>
+        <div style="text-align:right;min-width:220px">
+          <p class="muted" style="margin:0 0 8px">Featured</p>
+          <div style="display:grid;grid-template-columns:repeat(2,80px);gap:8px;justify-content:end">
+            <img src="images/featured1.jpg" alt="featured" style="width:80px;height:80px;object-fit:cover;border-radius:6px;box-shadow:0 6px 20px rgba(20,20,20,0.06)">
+            <img src="images/featured2.jpg" alt="featured" style="width:80px;height:80px;object-fit:cover;border-radius:6px;box-shadow:0 6px 20px rgba(20,20,20,0.06)">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="gallery" class="gallery-wrap">
+      <h2 style="margin:10px 0 16px;letter-spacing:1px">Gallery</h2>
+      <div id="galleryGrid" class="gallery" aria-live="polite"></div>
+      <div class="more-wrap">
+        <button id="loadMore" class="btn">Load more</button>
+      </div>
+    </section>
+
+    <!-- Instagram section (grid) -->
+    <section id="instagram" style="padding-top:12px;padding-bottom:24px">
+      <h2 style="margin:6px 0 12px;letter-spacing:1px">From Instagram</h2>
+      <p class="muted" style="margin:0 0 12px">Live preview of my recent Instagram posts (@vitoosh)</p>
+
+      <!-- SAMPLE SnapWidget embed (you can replace with your own widget code) -->
+      <div id="instagramFeed" style="max-width:var(--max-width);margin:0 auto">
+        <!-- SnapWidget iframe sample (grid 3) - replace this with your own if desired -->
+        <iframe src="https://snapwidget.com/embed/123456" class="snapwidget-widget" allowtransparency="true" frameborder="0" scrolling="no" style="border:none;overflow:hidden;width:100%;height:400px"></iframe>
+      </div>
+    </section>
+
+    <section id="about" style="padding-bottom:28px">
+      <h3 style="margin-top:8px">About</h3>
+      <div id="aboutContent" class="muted">Loadable about text — editable from Netlify CMS.</div>
+    </section>
+
+    <section id="contact" style="padding-bottom:48px">
+      <h3>Contact</h3>
+      <div id="contactContent" class="muted">Loadable contact info — editable from Netlify CMS.</div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+      <div class="muted">© <span id="year"></span> VITOOSH ARTWORKS</div>
+      <div class="muted">Built with a minimal static template • Editable via Netlify CMS</div>
+    </div>
+  </footer>
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="lightbox" aria-hidden="true">
+    <div class="lightbox-content">
+      <button class="lb-close" id="lbClose" title="Close">✕</button>
+      <button class="lb-arrow lb-prev" id="lbPrev" aria-label="Previous">‹</button>
+      <img id="lbImage" src="" alt="">
+      <button class="lb-arrow lb-next" id="lbNext" aria-label="Next">›</button>
+      <div class="lb-caption" id="lbCaption"></div>
+    </div>
+  </div>
+
+  <script>
+    // ========= CONFIG =========
+    // Add your image filenames (place those files in /images/) below.
+    const artworks = [
+      // Example placeholders (replace with your actual filenames in /images)
+      "sample1.jpg","sample2.jpg","sample3.jpg","sample4.jpg","sample5.jpg",
+      "sample6.jpg","sample7.jpg","sample8.jpg","sample9.jpg","sample10.jpg"
+    ];
+    const PAGE_SIZE = 18; let pageIndex = 0;
+    const gallery = document.getElementById('galleryGrid');
+    const loadMoreBtn = document.getElementById('loadMore');
+    function createItem(filename,index){const div=document.createElement('div');div.className='item';const img=document.createElement('img');img.src='images/'+filename;img.alt=filename.replace(/[-_]/g,' ').replace(/\.[^/.]+$/,'');img.loading='lazy';img.dataset.index=index;img.addEventListener('click',()=>openLightbox(index));div.appendChild(img);return div}
+    function loadPage(){const start=pageIndex*PAGE_SIZE;const end=Math.min(start+PAGE_SIZE,artworks.length);for(let i=start;i<end;i++){gallery.appendChild(createItem(artworks[i],i))}pageIndex++;if(pageIndex*PAGE_SIZE>=artworks.length){loadMoreBtn.style.display='none'}else{loadMoreBtn.style.display='inline-block'}}
+    loadMoreBtn.addEventListener('click',loadPage);
+    if(artworks.length===0){gallery.innerHTML='<p class="muted">No artworks yet. Edit the artworks array in the template and upload images to /images.</p>';loadMoreBtn.style.display='none'}else{loadPage()}
+    // Lightbox
+    const lb=document.getElementById('lightbox'),lbImage=document.getElementById('lbImage'),lbCaption=document.getElementById('lbCaption'),lbClose=document.getElementById('lbClose'),lbPrev=document.getElementById('lbPrev'),lbNext=document.getElementById('lbNext');let currentIndex=0;
+    function openLightbox(i){currentIndex=i;lbImage.src='images/'+artworks[i];lbImage.alt=artworks[i];lbCaption.textContent=(i+1)+' / '+artworks.length+' — '+(artworks[i].replace(/[-_]/g,' ').replace(/\.[^/.]+$/,''));lb.classList.add('open');lb.setAttribute('aria-hidden','false')}
+    function closeLightbox(){lb.classList.remove('open');lb.setAttribute('aria-hidden','true')}
+    function nextImage(){currentIndex=(currentIndex<artworks.length-1)?currentIndex+1:0;openLightbox(currentIndex)}
+    function prevImage(){currentIndex=(currentIndex>0)?currentIndex-1:artworks.length-1;openLightbox(currentIndex)}
+    lbClose.addEventListener('click',closeLightbox);lbNext.addEventListener('click',nextImage);lbPrev.addEventListener('click',prevImage);
+    window.addEventListener('keydown',(e)=>{if(lb.classList.contains('open')){if(e.key==='ArrowRight')nextImage();if(e.key==='ArrowLeft')prevImage();if(e.key==='Escape')closeLightbox()}});
+    lb.addEventListener('click',(e)=>{if(e.target===lb)closeLightbox()});document.getElementById('year').textContent=new Date().getFullYear();
+
+    // Load About & Contact from JSON endpoints if present (Netlify CMS will create content files)
+    async function fetchContent(){
+      try{
+        const aboutResp=await fetch('/content/about.md');
+        if(aboutResp.ok){const txt=await aboutResp.text();document.getElementById('aboutContent').textContent=stripFrontMatter(txt)}
+        const contactResp=await fetch('/content/contact.md');
+        if(contactResp.ok){const txt2=await contactResp.text();document.getElementById('contactContent').innerHTML=mdToHtml(stripFrontMatter(txt2))}
+      }catch(e){/* silent */}
+    }
+    function stripFrontMatter(md){return md.replace(/^---[\s\S]*?---/,'').trim()}
+    function mdToHtml(md){ // minimal markdown to HTML for simple paragraphs and links
+      return md.replace(/\n\n/g,'</p><p>').replace(/\[(.*?)\]\((.*?)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>').replace(/\n/g,'<br>');
+    }
+    fetchContent();
+  </script>
+</body>
 </html>
