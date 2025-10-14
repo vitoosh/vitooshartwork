@@ -1,16 +1,20 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>VITOOSH CMS</title>
   </head>
   <body>
-    <!-- Load Netlify CMS (GitHub backend compatible) -->
-    <script src="https://unpkg.com/netlify-cms-app@^2.0/dist/netlify-cms.js"></script>
+    <!-- Load the correct Netlify CMS app -->
+    <script src="https://unpkg.com/netlify-cms-app@^2.15.0/dist/netlify-cms.js"></script>
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        NetlifyCmsApp.init();
+      window.addEventListener('load', () => {
+        if (typeof window.NetlifyCmsApp !== "undefined") {
+          window.NetlifyCmsApp.init();
+        } else {
+          document.body.innerHTML = "<h2 style='text-align:center;margin-top:2rem;'>⚠️ Netlify CMS failed to load. Please refresh or check your script URL.</h2>";
+        }
       });
     </script>
   </body>
