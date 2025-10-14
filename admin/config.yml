@@ -1,42 +1,43 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: vitoosh/vitooshartwork
   branch: main
+  base_url: https://vitooshartwork.vercel.app
+  auth_type: implicit
+  app_id: 9b4df73e8cc1c2b6d4d4   # example placeholder app id
 
-media_folder: "images/uploads"
-public_folder: "/images/uploads"
+media_folder: "images"
+public_folder: "/images"
 
-# Artworks: stored as a JSON list in artworks.json (image-only entries)
+site_url: "https://vitooshartwork.vercel.app"
+logo_url: "/images/profile.jpg"
+
 collections:
   - name: "artworks"
     label: "Artworks"
-    file: "artworks.json"
-    format: json
+    folder: "images"
+    create: true
+    slug: "{{slug}}"
     fields:
-      - label: "Images"
-        name: "artworks"
-        widget: "list"
-        field:
-          label: "Image"
-          name: "image"
-          widget: "image"
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Image", name: "image", widget: "image" }
+      - { label: "Description", name: "description", widget: "text", required: false }
 
   - name: "about"
     label: "About Page"
     files:
-      - file: "content/about.md"
-        label: "About"
-        name: "about"
+      - file: "about.html"
+        label: "About Page"
+        name: "aboutpage"
         fields:
-          - { label: "Title", name: "title", widget: "string" }
-          - { label: "Profile image", name: "image", widget: "image", required: false }
-          - { label: "Body", name: "body", widget: "markdown" }
+          - { label: "Profile Image", name: "profile", widget: "image" }
+          - { label: "Bio", name: "body", widget: "markdown" }
 
   - name: "contact"
     label: "Contact Page"
     files:
-      - file: "content/contact.md"
-        label: "Contact"
-        name: "contact"
+      - file: "contact.html"
+        label: "Contact Page"
+        name: "contactpage"
         fields:
-          - { label: "Title", name: "title", widget: "string" }
-          - { label: "Body", name: "body", widget: "markdown" }
+          - { label: "Contact Info", name: "body", widget: "markdown" }
