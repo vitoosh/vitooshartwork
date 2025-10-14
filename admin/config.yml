@@ -1,16 +1,13 @@
 backend:
   name: github
-  repo: vitoosh/vitooshartwork   # your GitHub repo (owner/repo)
+  repo: vitoosh/vitooshartwork  # your repo
   branch: main
-  base_url: https://vitooshartwork.vercel.app
-  auth_type: implicit
-  app_id: 0a9231lirea3G1ltcQrRl  # <-- replace with your actual GitHub OAuth app client ID
 
 media_folder: "images"
 public_folder: "/images"
 
 site_url: "https://vitooshartwork.vercel.app"
-logo_url: "/images/profile.jpg"
+display_url: "https://vitooshartwork.vercel.app"
 
 collections:
   - name: "artworks"
@@ -23,21 +20,18 @@ collections:
       - { label: "Image", name: "image", widget: "image" }
       - { label: "Description", name: "description", widget: "text", required: false }
 
-  - name: "about"
-    label: "About Page"
+  - name: "pages"
+    label: "Pages"
     files:
-      - file: "about.html"
+      - file: "content/about.html"
         label: "About Page"
-        name: "aboutpage"
+        name: "about"
         fields:
           - { label: "Profile Image", name: "profile", widget: "image" }
-          - { label: "Bio", name: "body", widget: "markdown" }
-
-  - name: "contact"
-    label: "Contact Page"
-    files:
-      - file: "contact.html"
+          - { label: "Content", name: "body", widget: "markdown" }
+      - file: "content/contact.html"
         label: "Contact Page"
-        name: "contactpage"
+        name: "contact"
         fields:
-          - { label: "Contact Info", name: "body", widget: "markdown" }
+          - { label: "Email", name: "email", widget: "string" }
+          - { label: "Message", name: "message", widget: "text" }
