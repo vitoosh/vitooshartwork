@@ -2,10 +2,78 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>About – VITOOSH ARTWORKS</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>About — VITOOSH ARTWORKS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:#fff;color:#111}
+    .nav{max-width:1200px;margin:0 auto;padding:20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee}
+    .nav a{color:#6b6b6b;text-decoration:none;margin-left:18px;font-size:13px}
+    .container{max-width:1200px;margin:0 auto;padding:40px 16px}
+    .profile{display:flex;gap:40px;align-items:flex-start}
+    .profile-img{width:320px;height:320px;border-radius:6px;object-fit:cover;flex:0 0 320px;box-shadow:0 10px 30px rgba(0,0,0,0.06)}
+    @media (max-width:900px){.profile{flex-direction:column}.profile-img{width:100%;height:auto;aspect-ratio:1/1}}
+    .bio h1{margin:0 0 8px;font-size:24px;letter-spacing:1px}
+    .bio p{color:#6b6b6b;line-height:1.6}
+    footer{max-width:1200px;margin:0 auto;padding:36px 16px;border-top:1px solid #eee;color:#777;text-align:center}
+  </style>
 </head>
 <body>
-  <h1>About</h1>
-  <p>This is the About page. You can edit this from the CMS later.</p>
+  <header class="nav">
+    <div style="font-weight:700;letter-spacing:2px">VITOOSH ARTWORKS</div>
+    <nav>
+      <a href="/">Gallery</a>
+      <a href="/about.html">About</a>
+      <a href="/contact.html">Contact</a>
+      <a href="/admin/" style="margin-left:26px">Admin</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div id="aboutWrap" class="profile">
+      <!-- profile image and bio will be injected here by JS from /content/about.md -->
+      <img id="profileImg" class="profile-img" src="images/profile.jpg" alt="Profile image">
+      <div class="bio">
+        <h1 id="aboutTitle">VITOOSH ARTWORKS</h1>
+        <div id="aboutBody"><p style="color:#6b6b6b">Artist bio loading…</p></div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    © <span id="year"></span> VITOOSH ARTWORKS
+  </footer>
+
+  <script>
+    // Load about content from content/about.md (created by CMS)
+    async function loadAbout(){
+      try{
+        const res = await fetch('/content/about.md', {cache:'no-store'});
+        if(!res.ok) return;
+        const txt = await res.text();
+        // extract frontmatter image if present
+        const fmMatch = txt.match(/^---\n([\\s\\S]*?)\n---/);
+        let fm = {};
+        let body = txt;
+        if(fmMatch){
+          const fmText = fmMatch[1];
+          body = txt.replace(fmMatch[0],'').trim();
+          fmText.split(/\\n/).forEach(line=>{
+            const m = line.match(/^([^:]+):\\s*(.+)$/);
+            if(m) fm[m[1].trim()] = m[2].trim().replace(/^\"|\"$/g,'');
+          });
+        }
+        if(fm.image){
+          document.getElementById('profileImg').src = fm.image;
+        }
+        if(fm.title) document.getElementById('aboutTitle').textContent = fm.title;
+        // simple markdown -> paragraphs for body
+        const html = body.split('\\n\\n').map(p=>'<p style=\"color:#6b6b6b;line-height:1.6\">'+p.replace(/\\n/g,'<br>')+'</p>').join('');
+        document.getElementById('aboutBody').innerHTML = html;
+      }catch(e){ console.warn('No about content found',e); }
+    }
+    document.getElementById('year').textContent = new Date().getFullYear();
+    loadAbout();
+  </script>
 </body>
 </html>
