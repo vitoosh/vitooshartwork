@@ -4,7 +4,7 @@ backend:
   branch: main
   base_url: https://vitooshartwork.vercel.app
   auth_type: implicit
-  app_id: 9b4df73e8cc1c2b6d4d4   # example placeholder app id
+  app_id: Ov23lirezaJGlttcQrRl   # example placeholder app id
 
 media_folder: "images"
 public_folder: "/images"
