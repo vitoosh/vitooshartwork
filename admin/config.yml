@@ -1,13 +1,16 @@
 backend:
   name: github
-  repo: vitoosh/vitooshartwork
+  repo: vitoosh/vitooshartwork   # your GitHub repo (owner/repo)
   branch: main
-  auth_type: implicit
   base_url: https://vitooshartwork.vercel.app
-  app_id: OV23I1lrea3GltltCqRl  # your GitHub OAuth App Client ID
+  auth_type: implicit
+  app_id: 0a9231lirea3G1ltcQrRl  # <-- replace with your actual GitHub OAuth app client ID
 
 media_folder: "images"
 public_folder: "/images"
+
+site_url: "https://vitooshartwork.vercel.app"
+logo_url: "/images/profile.jpg"
 
 collections:
   - name: "artworks"
