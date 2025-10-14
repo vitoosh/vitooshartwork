@@ -7,29 +7,25 @@
   </head>
   <body>
     <h2 id="loading" style="text-align:center;margin-top:2rem;color:#666;">
-      Loading CMS...
+      Loading Decap CMS...
     </h2>
 
-    <!-- Load Netlify CMS from jsDelivr -->
-    <script src="https://cdn.jsdelivr.net/npm/netlify-cms-app@2.15.0/dist/netlify-cms-app.js"></script>
+    <!-- Load Decap CMS -->
+    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 
     <script>
-      // Try initializing Netlify CMS once script is loaded
       const initCMS = () => {
-        if (window.CMS || window.NetlifyCmsApp) {
-          (window.CMS || window.NetlifyCmsApp).init();
+        if (window.CMS) {
+          window.CMS.init();
           document.getElementById("loading").remove();
         } else {
           document.getElementById("loading").innerHTML = `
-            ⚠️ CMS failed to load. Please refresh or check your script URL.
+            ⚠️ Decap CMS failed to load.<br>
+            Please refresh or check the script URL.
           `;
         }
       };
-
-      // Give it a short delay to ensure the script loads fully
-      window.addEventListener("load", () => {
-        setTimeout(initCMS, 800);
-      });
+      window.addEventListener("load", () => setTimeout(initCMS, 500));
     </script>
   </body>
 </html>
