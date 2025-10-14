@@ -2,30 +2,34 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>VITOOSH CMS</title>
   </head>
+
   <body>
-    <h2 id="loading" style="text-align:center;margin-top:2rem;color:#666;">
-      Loading Decap CMS...
+    <!-- Loading message -->
+    <h2 id="loading" style="text-align:center;margin-top:2rem;">
+      🚀 Loading Decap CMS...
     </h2>
 
     <!-- Load Decap CMS -->
-    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+    <script src="https://unpkg.com/decap-cms@3.0.0/dist/decap-cms.js"></script>
 
     <script>
-      const initCMS = () => {
-        if (window.CMS) {
+      window.addEventListener("load", () => {
+        // Wait for Decap CMS to load
+        if (typeof window.CMS !== "undefined") {
           window.CMS.init();
-          document.getElementById("loading").remove();
+          // Safely remove the loading message
+          const loading = document.getElementById("loading");
+          if (loading && loading.parentNode) {
+            loading.parentNode.removeChild(loading);
+          }
         } else {
-          document.getElementById("loading").innerHTML = `
-            ⚠️ Decap CMS failed to load.<br>
-            Please refresh or check the script URL.
-          `;
+          document.body.innerHTML =
+            "<h2 style='text-align:center;margin-top:2rem;'>⚠️ Decap CMS failed to load. Please refresh or check your script URL.</h2>";
         }
-      };
-      window.addEventListener("load", () => setTimeout(initCMS, 500));
+      });
     </script>
   </body>
 </html>
