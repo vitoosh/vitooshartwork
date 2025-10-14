@@ -2,31 +2,40 @@ backend:
   name: git-gateway
   branch: main
 
-media_folder: "images"
-public_folder: "/images"
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
 
+# Artworks: stored as a JSON list in artworks.json (image-only entries)
 collections:
   - name: "artworks"
     label: "Artworks"
-    folder: "images"
-    create: true
-    slug: "{{slug}}"
+    file: "artworks.json"
+    format: json
     fields:
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Image", name: "image", widget: "image" }
+      - label: "Images"
+        name: "artworks"
+        widget: "list"
+        field:
+          label: "Image"
+          name: "image"
+          widget: "image"
 
-  - name: "pages"
-    label: "Pages"
+  - name: "about"
+    label: "About Page"
     files:
-      - file: "about.html"
-        label: "About Page"
+      - file: "content/about.md"
+        label: "About"
         name: "about"
         fields:
           - { label: "Title", name: "title", widget: "string" }
+          - { label: "Profile image", name: "image", widget: "image", required: false }
           - { label: "Body", name: "body", widget: "markdown" }
 
-      - file: "contact.html"
-        label: "Contact Page"
+  - name: "contact"
+    label: "Contact Page"
+    files:
+      - file: "content/contact.md"
+        label: "Contact"
         name: "contact"
         fields:
           - { label: "Title", name: "title", widget: "string" }
