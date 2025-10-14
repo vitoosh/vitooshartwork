@@ -80,4 +80,114 @@
       inset: 0;
       display: none;
       align-items: center;
-      justify-
+      justify-content: center;
+      background: rgba(0,0,0,0.85);
+      z-index: 1000;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox img {
+      max-width: 92vw;
+      max-height: 90vh;
+      border-radius: 8px;
+    }
+    .lightbox button {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 28px;
+      cursor: pointer;
+    }
+
+    /* Loading Spinner */
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 60vh;
+    }
+    .spinner {
+      width: 42px;
+      height: 42px;
+      border: 3px solid #ddd;
+      border-top-color: #111;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <div class="brand">VITOOSH ARTWORKS</div>
+      <a href="/admin/" style="font-size:13px;color:#777;text-decoration:none;">Admin</a>
+    </div>
+  </header>
+
+  <main>
+    <h2 style="font-weight:600;letter-spacing:1px;margin-bottom:24px;">Gallery</h2>
+    <div id="loading" class="loading"><div class="spinner"></div></div>
+    <div id="gallery" class="gallery" style="display:none;"></div>
+  </main>
+
+  <footer>
+    © <span id="year"></span> VITOOSH ARTWORKS
+  </footer>
+
+  <div id="lightbox" class="lightbox">
+    <button id="closeBtn">✕</button>
+    <img id="lightboxImg" src="" alt="">
+  </div>
+
+  <script>
+    async function loadArtworks() {
+      const gallery = document.getElementById('gallery');
+      const loading = document.getElementById('loading');
+      try {
+        const res = await fetch('artworks.json');
+        const artworks = await res.json();
+        artworks.forEach(img => {
+          const div = document.createElement('div');
+          div.className = 'item';
+          const image = document.createElement('img');
+          image.src = img;
+          image.alt = 'Artwork';
+          image.addEventListener('click', () => openLightbox(img));
+          div.appendChild(image);
+          gallery.appendChild(div);
+        });
+      } catch (err) {
+        console.error('Error loading artworks:', err);
+        loading.innerHTML = '<p style="color:#888;">Failed to load artworks.</p>';
+      } finally {
+        loading.style.display = 'none';
+        gallery.style.display = 'block';
+      }
+    }
+
+    const lb = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lightboxImg');
+    const closeBtn = document.getElementById('closeBtn');
+
+    function openLightbox(src) {
+      lbImg.src = src;
+      lb.classList.add('open');
+    }
+    function closeLightbox() {
+      lb.classList.remove('open');
+    }
+
+    closeBtn.addEventListener('click', closeLightbox);
+    lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    loadArtworks();
+  </script>
+</body>
+</html>
