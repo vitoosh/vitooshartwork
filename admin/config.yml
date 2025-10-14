@@ -3,7 +3,8 @@ backend:
   repo: vitoosh/vitooshartwork
   branch: main
   auth_type: implicit
-  app_id: Ov23lirezaJGlttcQrRl
+  base_url: https://vitooshartwork.vercel.app
+  app_id: OV23I1lrea3GltltCqRl  # your GitHub OAuth App Client ID
 
 media_folder: "images"
 public_folder: "/images"
@@ -17,3 +18,23 @@ collections:
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Image", name: "image", widget: "image" }
+      - { label: "Description", name: "description", widget: "text", required: false }
+
+  - name: "about"
+    label: "About Page"
+    files:
+      - file: "about.html"
+        label: "About Page"
+        name: "aboutpage"
+        fields:
+          - { label: "Profile Image", name: "profile", widget: "image" }
+          - { label: "Bio", name: "body", widget: "markdown" }
+
+  - name: "contact"
+    label: "Contact Page"
+    files:
+      - file: "contact.html"
+        label: "Contact Page"
+        name: "contactpage"
+        fields:
+          - { label: "Contact Info", name: "body", widget: "markdown" }
