@@ -2,15 +2,11 @@ backend:
   name: github
   repo: vitoosh/vitooshartwork
   branch: main
-  base_url: https://vitooshartwork.vercel.app
   auth_type: implicit
-  app_id: Ov23lirezaJGlttcQrRl   # example placeholder app id
+  app_id: Ov23lirezaJGlttcQrRl
 
 media_folder: "images"
 public_folder: "/images"
-
-site_url: "https://vitooshartwork.vercel.app"
-logo_url: "/images/profile.jpg"
 
 collections:
   - name: "artworks"
@@ -21,23 +17,3 @@ collections:
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Image", name: "image", widget: "image" }
-      - { label: "Description", name: "description", widget: "text", required: false }
-
-  - name: "about"
-    label: "About Page"
-    files:
-      - file: "about.html"
-        label: "About Page"
-        name: "aboutpage"
-        fields:
-          - { label: "Profile Image", name: "profile", widget: "image" }
-          - { label: "Bio", name: "body", widget: "markdown" }
-
-  - name: "contact"
-    label: "Contact Page"
-    files:
-      - file: "contact.html"
-        label: "Contact Page"
-        name: "contactpage"
-        fields:
-          - { label: "Contact Info", name: "body", widget: "markdown" }
