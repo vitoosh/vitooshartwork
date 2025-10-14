@@ -5,16 +5,16 @@ backend:
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
 
-site_url: "https://vitoosh.netlify.app"
-display_url: "https://vitoosh.netlify.app"
-
 collections:
   - name: "artworks"
     label: "Artworks"
-    folder: "artworks"
-    create: true
-    slug: "{{slug}}"
+    file: "artworks.json"
+    format: json
     fields:
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Image", name: "image", widget: "image" }
-      - { label: "Description", name: "description", widget: "text", required: false }
+      - label: "Images"
+        name: "artworks"
+        widget: "list"
+        field:
+          label: "Image"
+          name: "image"
+          widget: "image"
