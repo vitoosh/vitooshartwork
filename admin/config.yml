@@ -1,45 +1,23 @@
 backend:
   name: github
-  repo: vitoosh/vitooshartwork
-  branch: main
+  repo: vitoosh/vitooshartwork   # <-- your GitHub repo
+  branch: main                   # or master if that’s your default
+  app_id: Ov23lirezaJGlttcQrRl   # <-- your GitHub OAuth client ID
   base_url: https://vitooshartwork.vercel.app
-  auth_type: implicit
-  app_id: Ov23lirezaJGlttcQrRl
-  redirect_uri: https://vitooshartwork.vercel.app/admin/
-  scope: repo
+  auth_endpoint: /api/auth
 
-media_folder: "images"
-public_folder: "/images"
+media_folder: "public/uploads"
+public_folder: "/uploads"
 
 site_url: "https://vitooshartwork.vercel.app"
-logo_url: "/images/profile.jpg"
 
 collections:
-  - name: "artworks"
-    label: "Artworks"
-    folder: "images"
+  - name: "blog"
+    label: "Blog"
+    folder: "content/blog"
     create: true
     slug: "{{slug}}"
     fields:
       - { label: "Title", name: "title", widget: "string" }
-      - { label: "Image", name: "image", widget: "image" }
-      - { label: "Description", name: "description", widget: "text", required: false }
-
-  - name: "about"
-    label: "About Page"
-    files:
-      - file: "about.html"
-        label: "About Page"
-        name: "aboutpage"
-        fields:
-          - { label: "Profile Image", name: "profile", widget: "image" }
-          - { label: "Bio", name: "body", widget: "markdown" }
-
-  - name: "contact"
-    label: "Contact Page"
-    files:
-      - file: "contact.html"
-        label: "Contact Page"
-        name: "contactpage"
-        fields:
-          - { label: "Contact Info", name: "body", widget: "markdown" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Body", name: "body", widget: "markdown" }
