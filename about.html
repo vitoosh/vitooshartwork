@@ -1,78 +1,112 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>About — VITOOSH ARTWORKS</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About – VITOOSH</title>
   <style>
-    body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:#fff;color:#111}
-    .nav{max-width:1200px;margin:0 auto;padding:20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee}
-    .nav a{color:#6b6b6b;text-decoration:none;margin-left:18px;font-size:13px}
-    .container{max-width:1200px;margin:0 auto;padding:40px 16px}
-    .profile{display:flex;gap:40px;align-items:flex-start}
-    .profile-img{width:320px;height:320px;border-radius:6px;object-fit:cover;flex:0 0 320px;box-shadow:0 10px 30px rgba(0,0,0,0.06)}
-    @media (max-width:900px){.profile{flex-direction:column}.profile-img{width:100%;height:auto;aspect-ratio:1/1}}
-    .bio h1{margin:0 0 8px;font-size:24px;letter-spacing:1px}
-    .bio p{color:#6b6b6b;line-height:1.6}
-    footer{max-width:1200px;margin:0 auto;padding:36px 16px;border-top:1px solid #eee;color:#777;text-align:center}
+    @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;600&display=swap');
+
+    body {
+      background: #0b0b0b;
+      color: #f1f1f1;
+      font-family: 'Rubik', sans-serif;
+      margin: 0;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      padding: 1rem 2rem;
+      border-bottom: 1px solid #1f1f1f;
+    }
+
+    header img {
+      height: 60px;
+    }
+
+    nav {
+      margin-left: auto;
+      display: flex;
+      gap: 2rem;
+    }
+
+    nav a {
+      color: #f1f1f1;
+      text-decoration: none;
+      font-weight: 500;
+      transition: opacity 0.2s ease;
+    }
+
+    nav a:hover {
+      opacity: 0.6;
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 3rem 2rem;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    #profile-img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 2rem;
+    }
+
+    #about-content {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      white-space: pre-line;
+    }
   </style>
 </head>
 <body>
-  <header class="nav">
-    <div style="font-weight:700;letter-spacing:2px">VITOOSH ARTWORKS</div>
+  <header>
+    <img id="site-logo" alt="Logo" />
     <nav>
-      <a href="/">Gallery</a>
-      <a href="/about.html">About</a>
-      <a href="/contact.html">Contact</a>
-      <a href="/admin/" style="margin-left:26px">Admin</a>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
     </nav>
   </header>
 
-  <main class="container">
-    <div id="aboutWrap" class="profile">
-      <!-- profile image and bio will be injected here by JS from /content/about.md -->
-      <img id="profileImg" class="profile-img" src="images/profile.jpg" alt="Profile image">
-      <div class="bio">
-        <h1 id="aboutTitle">VITOOSH ARTWORKS</h1>
-        <div id="aboutBody"><p style="color:#6b6b6b">Artist bio loading…</p></div>
-      </div>
-    </div>
+  <main>
+    <img id="profile-img" alt="Profile" />
+    <div id="about-content">Loading...</div>
   </main>
 
-  <footer>
-    © <span id="year"></span> VITOOSH ARTWORKS
-  </footer>
-
   <script>
-    // Load about content from content/about.md (created by CMS)
-    async function loadAbout(){
-      try{
-        const res = await fetch('/content/about.md', {cache:'no-store'});
-        if(!res.ok) return;
-        const txt = await res.text();
-        // extract frontmatter image if present
-        const fmMatch = txt.match(/^---\n([\\s\\S]*?)\n---/);
-        let fm = {};
-        let body = txt;
-        if(fmMatch){
-          const fmText = fmMatch[1];
-          body = txt.replace(fmMatch[0],'').trim();
-          fmText.split(/\\n/).forEach(line=>{
-            const m = line.match(/^([^:]+):\\s*(.+)$/);
-            if(m) fm[m[1].trim()] = m[2].trim().replace(/^\"|\"$/g,'');
-          });
-        }
-        if(fm.image){
-          document.getElementById('profileImg').src = fm.image;
-        }
-        if(fm.title) document.getElementById('aboutTitle').textContent = fm.title;
-        // simple markdown -> paragraphs for body
-        const html = body.split('\\n\\n').map(p=>'<p style=\"color:#6b6b6b;line-height:1.6\">'+p.replace(/\\n/g,'<br>')+'</p>').join('');
-        document.getElementById('aboutBody').innerHTML = html;
-      }catch(e){ console.warn('No about content found',e); }
+    const repo = "vitoosh/vitooshartwork";
+
+    async function loadLogo() {
+      const res = await fetch(`https://api.github.com/repos/${repo}/contents/assets/logo`);
+      const files = await res.json();
+      const logo = files.find(f => f.name.match(/\.(png|jpg|jpeg|svg)$/i));
+      if (logo) document.getElementById("site-logo").src = logo.download_url;
     }
-    document.getElementById('year').textContent = new Date().getFullYear();
+
+    async function loadProfile() {
+      const res = await fetch(`https://api.github.com/repos/${repo}/contents/assets/profile`);
+      const files = await res.json();
+      const img = files.find(f => f.name.match(/\.(png|jpg|jpeg)$/i));
+      if (img) document.getElementById("profile-img").src = img.download_url;
+    }
+
+    async function loadAbout() {
+      const res = await fetch(`https://raw.githubusercontent.com/${repo}/main/content/about.md`);
+      const text = await res.text();
+      document.getElementById("about-content").textContent = text;
+    }
+
+    loadLogo();
+    loadProfile();
     loadAbout();
   </script>
 </body>
