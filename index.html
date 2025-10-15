@@ -1,114 +1,104 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>VITOOSH ARTWORKS</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-  <meta name="description" content="VITOOSH ARTWORKS — portfolio gallery">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VITOOSH Artwork</title>
   <style>
-    :root { --max-width:1200px; --muted:#6b6b6b; --text:#111; }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:#fff;color:var(--text);-webkit-font-smoothing:antialiased}
-    header{position:sticky;top:0;background:rgba(255,255,255,0.86);backdrop-filter:blur(6px);border-bottom:1px solid #eee;z-index:20}
-    .nav{max-width:var(--max-width);margin:0 auto;padding:20px;display:flex;justify-content:space-between;align-items:center}
-    .brand{font-weight:700;letter-spacing:2px}
-    .nav a{color:var(--muted);text-decoration:none;font-size:13px;margin-left:18px}
-    .nav a:hover{color:var(--text)}
-    main{max-width:var(--max-width);margin:0 auto;padding:28px 16px 80px}
-    h1{margin:0 0 6px;font-size:20px;letter-spacing:1px}
-    .subtitle{color:var(--muted);margin:6px 0 18px}
-    /* masonry */
-    .gallery{column-count:3;column-gap:18px}
-    .item{display:inline-block;width:100%;margin:0 0 18px;break-inside:avoid}
-    .item img{width:100%;height:auto;display:block;border-radius:6px;box-shadow:0 6px 18px rgba(0,0,0,0.05);transition:transform .25s,box-shadow .25s;cursor:pointer}
-    .item img:hover{transform:translateY(-4px);box-shadow:0 10px 28px rgba(0,0,0,0.08)}
-    @media (max-width:1000px){.gallery{column-count:2}} @media (max-width:640px){.gallery{column-count:1}}
-    /* lightbox */
-    .lightbox{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.86);z-index:1000}
-    .lightbox.open{display:flex}
-    .lightbox img{max-width:92vw;max-height:90vh;border-radius:8px}
-    .lightbox .close{position:absolute;top:18px;right:22px;background:none;border:0;color:#fff;font-size:26px;cursor:pointer}
-    /* spinner */
-    .loading{display:flex;align-items:center;justify-content:center;height:40vh}
-    .spinner{width:40px;height:40px;border:3px solid #e6e6e6;border-top-color:#111;border-radius:50%;animation:spin 1s linear infinite}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    footer{max-width:var(--max-width);margin:0 auto;padding:36px 16px;border-top:1px solid #eee;color:var(--muted);text-align:center}
+    @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;600&display=swap');
+
+    body {
+      margin: 0;
+      background: #0b0b0b;
+      color: #f1f1f1;
+      font-family: 'Rubik', sans-serif;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      padding: 1rem 2rem;
+      border-bottom: 1px solid #1f1f1f;
+    }
+
+    header img {
+      height: 60px;
+    }
+
+    nav {
+      margin-left: auto;
+      display: flex;
+      gap: 2rem;
+    }
+
+    nav a {
+      color: #f1f1f1;
+      text-decoration: none;
+      font-weight: 500;
+      transition: opacity 0.2s ease;
+    }
+
+    nav a:hover {
+      opacity: 0.6;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+      padding: 3rem 2rem;
+    }
+
+    .gallery img {
+      width: 100%;
+      border-radius: 12px;
+      object-fit: cover;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .gallery img:hover {
+      transform: scale(1.03);
+      opacity: 0.9;
+    }
   </style>
 </head>
 <body>
   <header>
-    <div class="nav">
-      <div class="brand">VITOOSH ARTWORKS</div>
-      <nav>
-        <a href="/">Gallery</a>
-        <a href="/about.html">About</a>
-        <a href="/contact.html">Contact</a>
-        <a href="/admin/" style="margin-left:26px">Admin</a>
-      </nav>
-    </div>
+    <img id="site-logo" alt="Logo" />
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
   </header>
 
-  <main>
-    <h1>Gallery</h1>
-    <div class="subtitle">A curated collection of artworks. Click any image to view larger.</div>
-
-    <div id="loading" class="loading"><div class="spinner"></div></div>
-    <div id="gallery" class="gallery" style="display:none"></div>
-  </main>
-
-  <div id="lightbox" class="lightbox" aria-hidden="true">
-    <button class="close" id="lbClose" aria-label="Close">✕</button>
-    <img id="lbImg" src="" alt="Artwork">
-  </div>
-
-  <footer>
-    © <span id="year"></span> VITOOSH ARTWORKS
-  </footer>
+  <section class="gallery" id="gallery"></section>
 
   <script>
-    // Load artworks from artworks.json (image-only list)
-    async function loadArtworks(){
-      const loading = document.getElementById('loading');
-      const gallery = document.getElementById('gallery');
-      try{
-        const res = await fetch('artworks.json', {cache: "no-store"});
-        if(!res.ok) throw new Error('artworks.json not found');
-        const imgs = await res.json();
-        if(!Array.isArray(imgs) || imgs.length === 0){
-          loading.innerHTML = '<p style="color:#888">No artworks yet. Add images via Admin.</p>';
-          return;
-        }
-        imgs.forEach(src=>{
-          const item = document.createElement('div'); item.className='item';
-          const img = document.createElement('img'); img.src = src; img.alt='Artwork';
-          img.loading = 'lazy';
-          img.addEventListener('click', ()=> openLightbox(src));
-          item.appendChild(img); gallery.appendChild(item);
-        });
-      }catch(err){
-        console.error(err);
-        loading.innerHTML = '<p style="color:#888">Could not load artworks (artworks.json missing or invalid).</p>';
-      }finally{
-        loading.style.display = 'none';
-        gallery.style.display = 'block';
-      }
+    const repo = "vitoosh/vitooshartwork";
+
+    async function loadLogo() {
+      const res = await fetch(`https://api.github.com/repos/${repo}/contents/assets/logo`);
+      const files = await res.json();
+      const logo = files.find(f => f.name.match(/\.(png|jpg|jpeg|svg)$/i));
+      if (logo) document.getElementById("site-logo").src = logo.download_url;
     }
 
-    // Lightbox controls
-    const lb = document.getElementById('lightbox');
-    const lbImg = document.getElementById('lbImg');
-    const lbClose = document.getElementById('lbClose');
-    function openLightbox(src){ lbImg.src = src; lb.classList.add('open'); lb.setAttribute('aria-hidden','false'); }
-    function closeLightbox(){ lb.classList.remove('open'); lb.setAttribute('aria-hidden','true'); }
-    lbClose.addEventListener('click', closeLightbox);
-    lb.addEventListener('click', e => { if(e.target === lb) closeLightbox(); });
-    document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLightbox(); });
+    async function loadGallery() {
+      const res = await fetch(`https://api.github.com/repos/${repo}/contents/assets/artworks`);
+      const files = await res.json();
+      const gallery = document.getElementById("gallery");
+      files.forEach(file => {
+        if (file.type === "file" && file.name.match(/\.(jpg|jpeg|png|gif)$/i)) {
+          const img = document.createElement("img");
+          img.src = file.download_url;
+          gallery.appendChild(img);
+        }
+      });
+    }
 
-    document.getElementById('year').textContent = new Date().getFullYear();
-    loadArtworks();
+    loadLogo();
+    loadGallery();
   </script>
 </body>
 </html>
