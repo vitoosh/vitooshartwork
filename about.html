@@ -117,11 +117,11 @@
   </header>
 
   <main id="about-section">
-    <img src="assets/profile/profile.jpeg" alt="Profile" class="profile-img" />
+    <img src="assets/profile/profile.jpeg" alt="Profile" class="profile-img" id="profile-img" />
     <h1 id="about-title">VITOOSH ARTWORKS</h1>
     <h2 id="about-name">Adinarwastu Vito Koosnugroho</h2>
     <div id="about-content"></div>
-  </main>
+</main>
 
   <footer>
     <div class="footer-icons">
@@ -135,26 +135,35 @@
   </footer>
 
   <script>
-async function loadAbout() {
-  const res = await fetch('content/about.md');
-  const text = await res.text();
-  const match = text.match(/---([\s\S]*?)---/);
-  const data = match ? match[1].trim() : '';
-  const body = text.replace(/---([\s\S]*?)---/, '').trim();
-  const lines = data.split('\n');
-  const about = {};
-  lines.forEach(line => {
-    const [key, value] = line.split(':').map(v => v.trim().replace(/"/g, ''));
-    about[key] = value;
-  });
+  async function loadAbout() {
+  try {
+    const res = await fetch('content/about.md');
+    const text = await res.text();
 
-  document.getElementById('profile-img').src = about.image;
-  document.getElementById('about-title').textContent = about.title;
-  document.getElementById('about-name').textContent = about.name;
-  document.getElementById('about-text').innerHTML = body;
+    // Extract front matter
+    const match = text.match(/---([\s\S]*?)---/);
+    const frontMatter = match ? match[1].trim() : '';
+    const body = text.replace(/---([\s\S]*?)---/, '').trim();
+
+    const lines = frontMatter.split('\n').map(line => line.trim());
+    const about = {};
+
+    lines.forEach(line => {
+      const [key, value] = line.split(':').map(v => v.trim().replace(/"/g, ''));
+      if (key && value) about[key.toLowerCase()] = value;
+    });
+
+    document.getElementById('about-title').textContent = about.vitoosh || 'VITOOSH ARTWORKS';
+    document.getElementById('about-name').textContent = about.adinarwastu || '';
+    document.getElementById('about-content').innerHTML = body;
+  } catch (err) {
+    console.error('Failed to load about.md:', err);
+  }
 }
+
 loadAbout();
 </script>
+
 
 </body>
 </html>
