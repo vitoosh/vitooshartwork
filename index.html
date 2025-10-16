@@ -49,88 +49,97 @@
   </footer>
 
   <script>
-    const repo = "vitoosh/vitooshartwork";
+  const repo = "vitoosh/vitooshartwork";
 
-    // Projects dropdown toggle
-    const projectsToggle = document.getElementById('projectsToggle');
-    const projectsMenu = document.getElementById('projectsMenu');
-    document.addEventListener('click', (e) => {
-      if (projectsToggle.contains(e.target)) {
-        projectsMenu.style.display = projectsMenu.style.display === 'block' ? 'none' : 'block';
-      } else {
-        if (!projectsMenu.contains(e.target)) projectsMenu.style.display = 'none';
-      }
-    });
-
-    // Lightbox
-    const lb = document.getElementById('lightbox');
-    const lbImg = document.getElementById('lbImage');
-    const lbClose = document.getElementById('lbClose');
-    function openLightbox(src){
-      lbImg.src = src;
-      lb.classList.add('open');
-      lb.setAttribute('aria-hidden','false');
+  // --- Projects dropdown toggle ---
+  const projectsToggle = document.getElementById('projectsToggle');
+  const projectsMenu = document.getElementById('projectsMenu');
+  document.addEventListener('click', (e) => {
+    if (projectsToggle.contains(e.target)) {
+      projectsMenu.style.display =
+        projectsMenu.style.display === 'block' ? 'none' : 'block';
+    } else if (!projectsMenu.contains(e.target)) {
+      projectsMenu.style.display = 'none';
     }
-    function closeLightbox(){
-      lb.classList.remove('open');
-      lb.setAttribute('aria-hidden','true');
-    }
-    lbClose.addEventListener('click', closeLightbox);
-    lb.addEventListener('click', (e)=>{ if(e.target === lb) closeLightbox(); });
-    document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLightbox(); });
+  });
 
-    // Fetch images recursively from assets/artworks and subfolders
-    async function fetchFolderContents(path) {
-      const res = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`);
-      if (!res.ok) throw new Error('Failed to load ' + path);
-      return res.json();
-    }
+  // --- Lightbox ---
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lbImage');
+  const lbClose = document.getElementById('lbClose');
+  function openLightbox(src) {
+    lbImg.src = src;
+    lb.classList.add('open');
+    lb.setAttribute('aria-hidden', 'false');
+  }
+  function closeLightbox() {
+    lb.classList.remove('open');
+    lb.setAttribute('aria-hidden', 'true');
+  }
+  lbClose.addEventListener('click', closeLightbox);
+  lb.addEventListener('click', (e) => { if (e.target === lb) closeLightbox(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
 
-    async function collectAllArtworks() {
-      const rootPath = 'assets/artworks';
-      const collected = [];
-      try {
-        const entries = await fetchFolderContents(rootPath);
-        for (const entry of entries) {
-          if (entry.type === 'dir') {
-            const sub = await fetchFolderContents(entry.path);
-            sub.forEach(f => { if (f.type === 'file') collected.push(f); });
-          } else if (entry.type === 'file') {
-            collected.push(entry);
-          }
+  // --- Fetch artworks from GitHub ---
+  async function fetchFolderContents(path) {
+    const res = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`);
+    if (!res.ok) throw new Error('Failed to load ' + path);
+    return res.json();
+  }
+
+  async function collectAllArtworks() {
+    const rootPath = 'assets/artworks';
+    const collected = [];
+    const seen = new Set(); // to avoid duplicates
+
+    async function explore(path) {
+      const entries = await fetchFolderContents(path);
+      for (const entry of entries) {
+        if (entry.type === 'dir') {
+          await explore(entry.path); // recursive for subfolders
+        } else if (entry.type === 'file' && !seen.has(entry.name)) {
+          seen.add(entry.name);
+          collected.push(entry);
         }
-      } catch (e) {
-        console.error(e);
       }
-      return collected;
     }
 
-    function renderGallery(items, container){
-      container.innerHTML = '';
-      items.forEach(file=>{
-        const ext = file.name.split('.').pop().toLowerCase();
-        if (!/^(jpg|jpeg|png|gif|webp)$/.test(ext)) return;
-        const div = document.createElement('div'); div.className='item';
-        const img = document.createElement('img');
-        img.src = file.download_url;
-        img.alt = file.name.replace(/[-_]/g,' ').replace(/\.[^/.]+$/,'');
-        img.loading = 'lazy';
-        img.addEventListener('click', ()=>openLightbox(file.download_url));
-        div.appendChild(img);
-        container.appendChild(div);
-      });
+    try {
+      await explore(rootPath);
+    } catch (e) {
+      console.error(e);
     }
+    return collected;
+  }
 
-    (async ()=>{
-      document.getElementById('year').textContent = new Date().getFullYear();
-      const galleryEl = document.getElementById('gallery');
-      const files = await collectAllArtworks();
-      if (!files || files.length === 0) {
-        galleryEl.innerHTML = '<p style="color:#666;text-align:center">No artworks yet.</p>';
-      } else {
-        renderGallery(files, galleryEl);
-      }
-    })();
-  </script>
+  function renderGallery(items, container) {
+    container.innerHTML = '';
+    items.forEach(file => {
+      const ext = file.name.split('.').pop().toLowerCase();
+      if (!/^(jpg|jpeg|png|gif|webp)$/.test(ext)) return;
+      const div = document.createElement('div');
+      div.className = 'item';
+      const img = document.createElement('img');
+      img.src = file.download_url;
+      img.alt = file.name.replace(/[-_]/g, ' ').replace(/\.[^/.]+$/, '');
+      img.loading = 'lazy';
+      img.addEventListener('click', () => openLightbox(file.download_url));
+      div.appendChild(img);
+      container.appendChild(div);
+    });
+  }
+
+  (async () => {
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const galleryEl = document.getElementById('gallery');
+    const files = await collectAllArtworks();
+    if (!files || files.length === 0) {
+      galleryEl.innerHTML = '<p style="color:#666;text-align:center">No artworks yet.</p>';
+    } else {
+      renderGallery(files, galleryEl);
+    }
+  })();
+</script>
+
 </body>
 </html>
