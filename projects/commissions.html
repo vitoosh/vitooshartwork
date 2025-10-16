@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Commissions — VITOOSH ARTWORKS</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="header">
+    <a href="/index.html"><img class="logo" src="/assets/logo/logo.png" alt="VITOOSH Logo"></a>
+    <nav>
+      <div class="dropdown" id="projectsDropdown">
+        <div class="dropdown-toggle" id="projectsToggle">Projects ▾</div>
+        <div class="dropdown-menu" id="projectsMenu">
+          <a href="/projects/commissions.html">Commissions</a>
+          <a href="/projects/2025.html">2025</a>
+          <a href="/projects/2024.html">2024</a>
+          <a href="/projects/2023.html">2023</a>
+        </div>
+      </div>
+      <a href="/about.html">About</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h2 style="margin-top:0">Commissions</h2>
+    <section id="gallery" class="gallery" aria-live="polite"></section>
+  </main>
+
+  <div id="lightbox" class="lb" role="dialog" aria-hidden="true">
+    <button class="close" id="lbClose" aria-label="Close">✕</button>
+    <img id="lbImage" src="" alt="Artwork">
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div>© <span id="year"></span> VITOOSH ARTWORKS</div>
+      <a class="icon-btn" href="https://instagram.com/vitoosh" target="_blank" rel="noopener noreferrer" title="Instagram">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5zM18.5 6a.75.75 0 1 1 0 1.5A.75.75 0 0 1 18.5 6z"/></svg>
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    const repo = "vitoosh/vitooshartwork";
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // dropdown
+    const projectsToggle = document.getElementById('projectsToggle');
+    const projectsMenu = document.getElementById('projectsMenu');
+    document.addEventListener('click', (e) => {
+      if (projectsToggle.contains(e.target)) {
+        projectsMenu.style.display = projectsMenu.style.display === 'block' ? 'none' : 'block';
+      } else {
+        if (!projectsMenu.contains(e.target)) projectsMenu.style.display = 'none';
+      }
+    });
+
+    // lightbox
+    const lb = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lbImage');
+    const lbClose = document.getElementById('lbClose');
+    function openLightbox(src){ lbImg.src = src; lb.classList.add('open'); lb.setAttribute('aria-hidden','false'); }
+    function closeLightbox(){ lb.classList.remove('open'); lb.setAttribute('aria-hidden','true'); }
+    lbClose.addEventListener('click', closeLightbox);
+    lb.addEventListener('click', e=>{ if(e.target === lb) closeLightbox(); });
+    document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeLightbox(); });
+
+    async function loadProject(folder){
+      const gallery = document.getElementById('gallery');
+      try{
+        const res = await fetch(`https://api.github.com/repos/${repo}/contents/assets/artworks/${folder}`);
+        const files = await res.json();
+        files.forEach(file=>{
+          if (file.type === 'file' && file.name.match(/\.(jpg|jpeg|png|gif|webp)$/i)){
+            const div = document.createElement('div'); div.className='item';
+            const img = document.createElement('img'); img.src = file.download_url; img.alt = file.name;
+            img.loading = 'lazy'; img.addEventListener('click', ()=> openLightbox(file.download_url));
+            div.appendChild(img); gallery.appendChild(div);
+          }
+        });
+      }catch(e){
+        gallery.innerHTML = '<p style="color:#666;text-align:center">No artworks found for this project.</p>';
+      }
+    }
+
+    loadProject('commissions');
+  </script>
+</body>
+</html>
