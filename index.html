@@ -1,104 +1,87 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VITOOSH Artwork</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VITOOSH ARTWORKS</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;600&display=swap');
-
     body {
       margin: 0;
-      background: #0b0b0b;
-      color: #f1f1f1;
-      font-family: 'Rubik', sans-serif;
+      font-family: 'Inter', sans-serif;
+      background-color: #fff;
+      color: #111;
     }
-
     header {
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      padding: 1rem 2rem;
-      border-bottom: 1px solid #1f1f1f;
+      padding: 20px 40px;
+      border-bottom: 1px solid #eee;
     }
-
     header img {
-      height: 60px;
+      height: 40px;
     }
-
-    nav {
-      margin-left: auto;
-      display: flex;
-      gap: 2rem;
-    }
-
     nav a {
-      color: #f1f1f1;
+      margin-left: 30px;
       text-decoration: none;
+      color: #111;
       font-weight: 500;
-      transition: opacity 0.2s ease;
     }
-
     nav a:hover {
       opacity: 0.6;
     }
-
     .gallery {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 25px;
-      padding: 3rem 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 40px;
     }
-
     .gallery img {
       width: 100%;
-      border-radius: 12px;
-      object-fit: cover;
-      transition: transform 0.3s ease, opacity 0.3s ease;
-    }
-
-    .gallery img:hover {
-      transform: scale(1.03);
-      opacity: 0.9;
+      height: auto;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      transition: transform 0.2s ease;
     }
   </style>
 </head>
 <body>
   <header>
-    <img id="site-logo" alt="Logo" />
+    <a href="index.html"><img src="assets/logo/logo.png" alt="VITOOSH Logo"></a>
     <nav>
-      <a href="index.html">Home</a>
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
     </nav>
   </header>
 
-  <section class="gallery" id="gallery"></section>
+  <main>
+    <div class="gallery" id="gallery"></div>
+  </main>
 
   <script>
-    const repo = "vitoosh/vitooshartwork";
+    // Automatically load all images from assets/artworks/
+    const gallery = document.getElementById("gallery");
+    const imageExtensions = ["jpg", "jpeg", "png", "gif", "webp"];
 
-    async function loadLogo() {
-      const res = await fetch(`https://api.github.com/repos/${repo}/contents/assets/logo`);
-      const files = await res.json();
-      const logo = files.find(f => f.name.match(/\.(png|jpg|jpeg|svg)$/i));
-      if (logo) document.getElementById("site-logo").src = logo.download_url;
+    async function loadImages() {
+      try {
+        const response = await fetch("https://api.github.com/repos/vitoosh/vitooshartwork/contents/assets/artworks");
+        const files = await response.json();
+        files.forEach(file => {
+          const ext = file.name.split('.').pop().toLowerCase();
+          if (imageExtensions.includes(ext)) {
+            const img = document.createElement("img");
+            img.src = file.download_url;
+            img.alt = file.name;
+            gallery.appendChild(img);
+          }
+        });
+      } catch (error) {
+        gallery.innerHTML = "<p style='text-align:center;'>Unable to load artworks 😢</p>";
+      }
     }
-
-    async function loadGallery() {
-      const res = await fetch(`https://api.github.com/repos/${repo}/contents/assets/artworks`);
-      const files = await res.json();
-      const gallery = document.getElementById("gallery");
-      files.forEach(file => {
-        if (file.type === "file" && file.name.match(/\.(jpg|jpeg|png|gif)$/i)) {
-          const img = document.createElement("img");
-          img.src = file.download_url;
-          gallery.appendChild(img);
-        }
-      });
-    }
-
-    loadLogo();
-    loadGallery();
+    loadImages();
   </script>
 </body>
 </html>
