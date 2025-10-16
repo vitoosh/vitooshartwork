@@ -1,87 +1,76 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contact – VITOOSH</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — VITOOSH ARTWORKS</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;600&display=swap');
-
     body {
-      background: #0b0b0b;
-      color: #f1f1f1;
-      font-family: 'Rubik', sans-serif;
       margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #fff;
+      color: #111;
     }
-
     header {
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      padding: 1rem 2rem;
-      border-bottom: 1px solid #1f1f1f;
+      padding: 20px 40px;
+      border-bottom: 1px solid #eee;
     }
-
     header img {
-      height: 60px;
+      height: 40px;
     }
-
-    nav {
-      margin-left: auto;
-      display: flex;
-      gap: 2rem;
-    }
-
     nav a {
-      color: #f1f1f1;
+      margin-left: 30px;
       text-decoration: none;
+      color: #111;
       font-weight: 500;
-      transition: opacity 0.2s ease;
     }
-
     nav a:hover {
       opacity: 0.6;
     }
-
     main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 80vh;
       text-align: center;
-      padding: 3rem 2rem;
-      max-width: 700px;
-      margin: 0 auto;
-      line-height: 1.7;
-      font-size: 1.1rem;
+      padding: 20px;
+    }
+    article {
+      max-width: 600px;
+      line-height: 1.8;
+    }
+    a {
+      color: #111;
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
   <header>
-    <img id="site-logo" alt="Logo" />
+    <a href="index.html"><img src="assets/logo/logo.png" alt="VITOOSH Logo"></a>
     <nav>
-      <a href="index.html">Home</a>
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
     </nav>
   </header>
 
-  <main id="contact-content">Loading...</main>
+  <main>
+    <article id="contact-content"></article>
+  </main>
 
   <script>
-    const repo = "vitoosh/vitooshartwork";
-
-    async function loadLogo() {
-      const res = await fetch(`https://api.github.com/repos/${repo}/contents/assets/logo`);
-      const files = await res.json();
-      const logo = files.find(f => f.name.match(/\.(png|jpg|jpeg|svg)$/i));
-      if (logo) document.getElementById("site-logo").src = logo.download_url;
-    }
-
-    async function loadContact() {
-      const res = await fetch(`https://raw.githubusercontent.com/${repo}/main/content/contact.md`);
-      const text = await res.text();
-      document.getElementById("contact-content").textContent = text;
-    }
-
-    loadLogo();
-    loadContact();
+    fetch("content/contact.md")
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("contact-content").innerHTML = marked.parse(data);
+      })
+      .catch(() => {
+        document.getElementById("contact-content").innerHTML = "<p>Failed to load contact info.</p>";
+      });
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </body>
 </html>
