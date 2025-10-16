@@ -87,6 +87,59 @@
     }
 
     loadProject('2025');
+
+    // --- Disable right-click, drag, and certain shortcuts ---
+document.addEventListener('contextmenu', function (e) {
+  if (e.target.tagName === 'IMG') {
+    e.preventDefault();
+    showCopyrightMessage();
+  }
+});
+
+document.addEventListener('dragstart', function (e) {
+  if (e.target.tagName === 'IMG') e.preventDefault();
+});
+
+document.addEventListener('keydown', function (e) {
+  if ((e.ctrlKey || e.metaKey) && ['s', 'u', 'p'].includes(e.key.toLowerCase())) {
+    e.preventDefault();
+    showCopyrightMessage();
+  }
+});
+
+// --- Copyright overlay ---
+function showCopyrightMessage() {
+  // Prevent multiple overlays
+  if (document.getElementById('copyrightOverlay')) return;
+
+  const overlay = document.createElement('div');
+  overlay.id = 'copyrightOverlay';
+  overlay.textContent = '© 2025 VITOOSH ARTWORKS — All rights reserved.';
+  Object.assign(overlay.style, {
+    position: 'fixed',
+    bottom: '20px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    background: 'rgba(0, 0, 0, 0.75)',
+    color: 'white',
+    padding: '10px 20px',
+    borderRadius: '8px',
+    fontSize: '14px',
+    zIndex: '9999',
+    opacity: '0',
+    transition: 'opacity 0.3s ease',
+  });
+  document.body.appendChild(overlay);
+
+  // Fade in
+  requestAnimationFrame(() => (overlay.style.opacity = '1'));
+
+  // Fade out after 2.5 seconds
+  setTimeout(() => {
+    overlay.style.opacity = '0';
+    setTimeout(() => overlay.remove(), 500);
+  }, 2500);
+}
   </script>
 </body>
 </html>
