@@ -1,80 +1,74 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>About — VITOOSH ARTWORKS</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background-color: #fff;
-      color: #111;
-    }
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 40px;
-      border-bottom: 1px solid #eee;
-    }
-    header img {
-      height: 40px;
-    }
-    nav a {
-      margin-left: 30px;
-      text-decoration: none;
-      color: #111;
-      font-weight: 500;
-    }
-    nav a:hover {
-      opacity: 0.6;
-    }
-    main {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 60px 20px;
-      text-align: center;
-      max-width: 800px;
-      margin: auto;
-    }
-    .portrait {
-      width: 300px;
-      height: 300px;
-      border-radius: 12px;
-      object-fit: cover;
-      margin-bottom: 30px;
-    }
-    article {
-      line-height: 1.8;
-    }
-  </style>
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-  <header>
-    <a href="index.html"><img src="assets/logo/logo.png" alt="VITOOSH Logo"></a>
+  <header class="header">
+    <a href="/index.html"><img id="logo" class="logo" src="/assets/logo/logo.png" alt="VITOOSH Logo"></a>
     <nav>
-      <a href="about.html">About</a>
-      <a href="contact.html">Contact</a>
+      <div class="dropdown" id="projectsDropdown">
+        <div class="dropdown-toggle" id="projectsToggle">Projects ▾</div>
+        <div class="dropdown-menu" id="projectsMenu">
+          <a href="/projects/commissions.html">Commissions</a>
+          <a href="/projects/2025.html">2025</a>
+          <a href="/projects/2024.html">2024</a>
+          <a href="/projects/2023.html">2023</a>
+        </div>
+      </div>
+      <a href="/about.html">About</a>
+      <a href="/contact.html">Contact</a>
     </nav>
   </header>
 
-  <main>
-    <img src="assets/profile/profile.jpeg" alt="VITOOSH Portrait" class="portrait">
-    <article id="about-content"></article>
+  <main class="container">
+    <div class="about-wrap">
+      <img id="profileImg" class="profile-img" src="/assets/profile/profile.jpeg" alt="Profile image">
+      <div class="about-text" id="aboutText">
+        <p style="color:var(--muted)">Loading about content…</p>
+      </div>
+    </div>
   </main>
 
-  <script>
-    fetch("content/about.md")
-      .then(res => res.text())
-      .then(data => {
-        document.getElementById("about-content").innerHTML = marked.parse(data);
-      })
-      .catch(() => {
-        document.getElementById("about-content").innerHTML = "<p>Failed to load content.</p>";
-      });
-  </script>
+  <footer>
+    <div class="footer-inner">
+      <div>© <span id="year"></span> VITOOSH ARTWORKS</div>
+      <a class="icon-btn" href="https://instagram.com/vitoosh" target="_blank" rel="noopener noreferrer" title="Instagram">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5zM18.5 6a.75.75 0 1 1 0 1.5A.75.75 0 0 1 18.5 6z"/></svg>
+      </a>
+    </div>
+  </footer>
+
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    const repo = "vitoosh/vitooshartwork";
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // dropdown logic
+    const projectsToggle = document.getElementById('projectsToggle');
+    const projectsMenu = document.getElementById('projectsMenu');
+    document.addEventListener('click', (e) => {
+      if (projectsToggle.contains(e.target)) {
+        projectsMenu.style.display = projectsMenu.style.display === 'block' ? 'none' : 'block';
+      } else {
+        if (!projectsMenu.contains(e.target)) projectsMenu.style.display = 'none';
+      }
+    });
+
+    // load about markdown
+    (async ()=>{
+      try{
+        const raw = await fetch(`https://raw.githubusercontent.com/${repo}/main/content/about.md`);
+        if(!raw.ok) throw new Error('no about');
+        const text = await raw.text();
+        document.getElementById('aboutText').innerHTML = marked.parse(text);
+      }catch(e){
+        document.getElementById('aboutText').innerHTML = '<p style="color:var(--muted)">About content not found.</p>';
+      }
+    })();
+  </script>
 </body>
 </html>
