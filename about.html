@@ -135,32 +135,26 @@
   </footer>
 
   <script>
-    async function loadAbout() {
-      try {
-        const response = await fetch('content/about.md');
-        const text = await response.text();
-        const match = /---([\\s\\S]*?)---([\\s\\S]*)/.exec(text);
+async function loadAbout() {
+  const res = await fetch('content/about.md');
+  const text = await res.text();
+  const match = text.match(/---([\s\S]*?)---/);
+  const data = match ? match[1].trim() : '';
+  const body = text.replace(/---([\s\S]*?)---/, '').trim();
+  const lines = data.split('\n');
+  const about = {};
+  lines.forEach(line => {
+    const [key, value] = line.split(':').map(v => v.trim().replace(/"/g, ''));
+    about[key] = value;
+  });
 
-        if (match) {
-          const frontMatter = match[1].trim();
-          const content = match[2].trim();
+  document.getElementById('profile-img').src = about.image;
+  document.getElementById('about-title').textContent = about.title;
+  document.getElementById('about-name').textContent = about.name;
+  document.getElementById('about-text').innerHTML = body;
+}
+loadAbout();
+</script>
 
-          const metadata = {};
-          frontMatter.split('\\n').forEach(line => {
-            const [key, ...rest] = line.split(':');
-            metadata[key.trim()] = rest.join(':').trim().replace(/^"|"$/g, '');
-          });
-
-          document.getElementById('about-title').textContent = metadata.title || '';
-          document.getElementById('about-name').textContent = metadata.name || '';
-          document.querySelector('.profile-img').src = metadata.image || 'assets/profile/profile.jpeg';
-          document.getElementById('about-content').innerHTML = marked.parse(content);
-        }
-      } catch (error) {
-        console.error('Error loading about.md', error);
-      }
-    }
-    loadAbout();
-  </script>
 </body>
 </html>
