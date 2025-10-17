@@ -1,100 +1,70 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Vitoosh — Landing</title>
-
-  <!-- load main site CSS first so injected navbar inherits exact styles -->
-  <link rel="stylesheet" href="assets/css/style.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>VITOOSH ARTWORKS — Landing</title>
+  <meta name="description" content="VITOOSH ARTWORKS — entry page">
+  <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="assets/css/landing.css">
 </head>
 <body>
-  <!-- placeholder where we'll inject the real header/navbar from index.html -->
-  <div id="injected-header-placeholder" aria-hidden="true"></div>
+  <header class="header">
+    <a href="landing.html"><img id="logo" class="logo" src="assets/logo/logo.png" alt="VITOOSH Logo"></a>
 
-  <!-- landing image -->
-  <main class="landing-main" aria-label="Landing">
-    <img id="landingImage" class="landing-image" alt="landing image (click to enter)" />
+    <nav>
+      <div class="dropdown" id="projectsDropdown">
+        <div class="dropdown-toggle" id="projectsToggle">Projects ▾</div>
+        <div class="dropdown-menu" id="projectsMenu">
+          <a href="projects/commissions.html">Commissions</a>
+          <a href="projects/2025.html">2025</a>
+          <a href="projects/2024.html">2024</a>
+          <a href="projects/2023.html">2023</a>
+        </div>
+      </div>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main class="landing-container">
+    <img src="assets/landing/landing.jpg" alt="Landing Image" class="landing-image" id="landingImage">
   </main>
 
+  <footer>
+    <div class="footer-inner">
+      <div>© <span id="year"></span> VITOOSH ARTWORKS</div>
+      <a class="icon-btn" href="https://instagram.com/vitoosh" target="_blank" rel="noopener noreferrer" title="Instagram">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5zM18.5 6a.75.75 0 1 1 0 1.5A.75.75 0 0 1 18.5 6z"/>
+        </svg>
+      </a>
+    </div>
+  </footer>
+
   <script>
-    (function () {
-      const IMAGE_BASE = 'assets/landing/landing'; // we will try .jpg then .png
-      const landingImg = document.getElementById('landingImage');
+    // Set current year
+    document.getElementById('year').textContent = new Date().getFullYear();
 
-      // Try to resolve image extension (.jpg or .png)
-      function tryImage(srcs, i = 0) {
-        if (i >= srcs.length) {
-          // fallback: show a subtle message or leave black background
-          console.warn('Landing image not found. Checked:', srcs);
-          return;
-        }
-        const img = new Image();
-        img.onload = () => {
-          landingImg.src = srcs[i];
-        };
-        img.onerror = () => tryImage(srcs, i + 1);
-        img.src = srcs[i];
+    // Projects dropdown (same behavior)
+    const projectsToggle = document.getElementById('projectsToggle');
+    const projectsMenu = document.getElementById('projectsMenu');
+    document.addEventListener('click', (e) => {
+      if (projectsToggle.contains(e.target)) {
+        projectsMenu.style.display = projectsMenu.style.display === 'block' ? 'none' : 'block';
+      } else if (!projectsMenu.contains(e.target)) {
+        projectsMenu.style.display = 'none';
       }
-      tryImage([IMAGE_BASE + '.jpg', IMAGE_BASE + '.png']);
+    });
 
-      // Fetch header/navbar from index.html and inject it so the landing page matches exactly
-      // This assumes index.html is on the same origin (it is when deployed together).
-      fetch('/index.html', { cache: 'no-store' })
-        .then(resp => {
-          if (!resp.ok) throw new Error('index.html fetch failed: ' + resp.status);
-          return resp.text();
-        })
-        .then(html => {
-          // Create a DOM parser and attempt to find a header or .navbar element
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(html, 'text/html');
-          let header = doc.querySelector('header') || doc.querySelector('.navbar') || doc.querySelector('nav');
-
-          if (!header) {
-            // if no header found, try to find a top nav by common selectors
-            header = doc.querySelector('header, .header, .nav, .navbar, nav');
-          }
-
-          const placeholder = document.getElementById('injected-header-placeholder');
-
-          if (header) {
-            // Clone the header node and insert it in our page
-            const cloned = document.importNode(header, true);
-            // make sure the injected header is visible and accessible
-            placeholder.replaceWith(cloned);
-          } else {
-            // no header found: leave placeholder hidden (or you can render a fallback)
-            console.warn('No header/navbar found inside index.html; placeholder kept.');
-          }
-        })
-        .catch(err => {
-          console.warn('Could not load header from index.html:', err);
-          // Optional: keep placeholder or render a minimal fallback header
-        });
-
-      // Click handler: fade out and then navigate to index.html
-      landingImg.addEventListener('click', () => {
-        document.documentElement.classList.add('landing-fadeout');
-        setTimeout(() => {
-          // go to index page
-          window.location.href = '/index.html';
-        }, 700); // matches CSS timing below
-      });
-
-      // also allow keyboard Enter for accessibility
-      landingImg.tabIndex = 0;
-      landingImg.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') landingImg.click();
-      });
-
-      // small prefetch so index.html is ready when user clicks (avoids blink)
-      const prefetch = document.createElement('link');
-      prefetch.rel = 'prefetch';
-      prefetch.href = '/index.html';
-      document.head.appendChild(prefetch);
-    })();
+    // Fade transition and redirect
+    const landingImg = document.getElementById('landingImage');
+    landingImg.addEventListener('click', () => {
+      document.body.classList.add('fade-out');
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 800);
+    });
   </script>
 </body>
 </html>
