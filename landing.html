@@ -1,33 +1,69 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vitoosh | Landing</title>
-  <link rel="stylesheet" href="assets/css/landing.css" />
-  <link rel="stylesheet" href="assets/css/style.css" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>VITOOSH ARTWORKS — Landing</title>
+  <meta name="description" content="VITOOSH ARTWORKS — entry page">
+  <link rel="stylesheet" href="assets/css/landing.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="navbar">
-    <nav class="nav-menu">
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="projects.html">Projects</a></li>
-        <li><a href="contact.html">Contact</a></li>
-      </ul>
+  <header class="header">
+    <a href="landing.html"><img id="logo" class="logo" src="assets/logo/logo.png" alt="VITOOSH Logo"></a>
+
+    <nav>
+      <div class="dropdown" id="projectsDropdown">
+        <div class="dropdown-toggle" id="projectsToggle">Projects ▾</div>
+        <div class="dropdown-menu" id="projectsMenu">
+          <a href="projects/commissions.html">Commissions</a>
+          <a href="projects/2025.html">2025</a>
+          <a href="projects/2024.html">2024</a>
+          <a href="projects/2023.html">2023</a>
+        </div>
+      </div>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
     </nav>
   </header>
 
-  <div class="landing-container">
-    <img src="assets/landing/landing.png" alt="Landing Image" class="landing-image" id="landingImage">
-  </div>
+  <main class="landing-container">
+    <img src="assets/landing/landing.jpg" alt="Landing Image" class="landing-image" id="landingImage">
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div>© <span id="year"></span> VITOOSH ARTWORKS</div>
+      <a class="icon-btn" href="https://instagram.com/vitoosh" target="_blank" rel="noopener noreferrer" title="Instagram">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5zM18.5 6a.75.75 0 1 1 0 1.5A.75.75 0 0 1 18.5 6z"/>
+        </svg>
+      </a>
+    </div>
+  </footer>
 
   <script>
-    const image = document.getElementById('landingImage');
-    image.addEventListener('click', () => {
+    // Set current year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Projects dropdown (same behavior)
+    const projectsToggle = document.getElementById('projectsToggle');
+    const projectsMenu = document.getElementById('projectsMenu');
+    document.addEventListener('click', (e) => {
+      if (projectsToggle.contains(e.target)) {
+        projectsMenu.style.display = projectsMenu.style.display === 'block' ? 'none' : 'block';
+      } else if (!projectsMenu.contains(e.target)) {
+        projectsMenu.style.display = 'none';
+      }
+    });
+
+    // Fade transition and redirect
+    const landingImg = document.getElementById('landingImage');
+    landingImg.addEventListener('click', () => {
       document.body.classList.add('fade-out');
-      setTimeout(() => window.location.href = 'index.html', 800);
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 800);
     });
   </script>
 </body>
