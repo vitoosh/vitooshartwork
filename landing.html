@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vitoosh — Landing</title>
+  <link rel="stylesheet" href="assets/css/landing.css">
+</head>
+<body>
+  <div class="landing-container">
+    <img src="assets/landing/landing.jpg" alt="Landing Image" class="landing-image" id="landingImage">
+  </div>
+
+  <script>
+    // Detect click and fade out
+    const image = document.getElementById('landingImage');
+    image.addEventListener('click', () => {
+      document.body.classList.add('fade-out');
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 800); // matches the fade-out duration
+    });
+  </script>
+</body>
+</html>
