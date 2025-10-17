@@ -1,25 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Vitoosh — Landing</title>
+
+  <!-- load main site CSS first so injected navbar inherits exact styles -->
+  <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/landing.css">
 </head>
 <body>
-  <div class="landing-container">
-    <img src="assets/landing/landing.png" alt="Landing Image" class="landing-image" id="landingImage">
-  </div>
+  <!-- placeholder where we'll inject the real header/navbar from index.html -->
+  <div id="injected-header-placeholder" aria-hidden="true"></div>
+
+  <!-- landing image -->
+  <main class="landing-main" aria-label="Landing">
+    <img id="landingImage" class="landing-image" alt="landing image (click to enter)" />
+  </main>
 
   <script>
-    // Detect click and fade out
-    const image = document.getElementById('landingImage');
-    image.addEventListener('click', () => {
-      document.body.classList.add('fade-out');
-      setTimeout(() => {
-        window.location.href = 'index.html';
-      }, 800); // matches the fade-out duration
-    });
+    (function () {
+      const IMAGE_BASE = 'assets/landing/landing'; // we will try .jpg then .png
+      const landingImg = document.getElementById('landingImage');
+
+      // Try to resolve image extension (.jpg or .png)
+      function tryImage(srcs, i = 0) {
+        if (i >= srcs.length) {
+          // fallback: show a subtle message or leave black background
+          console.warn('Landing image not found. Checked:', srcs);
+          return;
+        }
+        const img = new Image();
+        img.onload = () => {
+          landingImg.src = srcs[i];
+        };
+        img.onerror = () => tryImage(srcs, i + 1);
+        img.src = srcs[i];
+      }
+      tryImage([IMAGE_BASE + '.jpg', IMAGE_BASE + '.png']);
+
+      // Fetch header/navbar from index.html and inject it so the landing page matches exactly
+      // This assumes index.html is on the same origin (it is when deployed together).
+      fetch('/index.html', { cache: 'no-store' })
+        .then(resp => {
+          if (!resp.ok) throw new Error('index.html fetch failed: ' + resp.status);
+          return resp.text();
+        })
+        .then(html => {
+          // Create a DOM parser and attempt to find a header or .navbar element
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          let header = doc.querySelector('header') || doc.querySelector('.navbar') || doc.querySelector('nav');
+
+          if (!header) {
+            // if no header found, try to find a top nav by common selectors
+            header = doc.querySelector('header, .header, .nav, .navbar, nav');
+          }
+
+          const placeholder = document.getElementById('injected-header-placeholder');
+
+          if (header) {
+            // Clone the header node and insert it in our page
+            const cloned = document.importNode(header, true);
+            // make sure the injected header is visible and accessible
+            placeholder.replaceWith(cloned);
+          } else {
+            // no header found: leave placeholder hidden (or you can render a fallback)
+            console.warn('No header/navbar found inside index.html; placeholder kept.');
+          }
+        })
+        .catch(err => {
+          console.warn('Could not load header from index.html:', err);
+          // Optional: keep placeholder or render a minimal fallback header
+        });
+
+      // Click handler: fade out and then navigate to index.html
+      landingImg.addEventListener('click', () => {
+        document.documentElement.classList.add('landing-fadeout');
+        setTimeout(() => {
+          // go to index page
+          window.location.href = '/index.html';
+        }, 700); // matches CSS timing below
+      });
+
+      // also allow keyboard Enter for accessibility
+      landingImg.tabIndex = 0;
+      landingImg.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') landingImg.click();
+      });
+
+      // small prefetch so index.html is ready when user clicks (avoids blink)
+      const prefetch = document.createElement('link');
+      prefetch.rel = 'prefetch';
+      prefetch.href = '/index.html';
+      document.head.appendChild(prefetch);
+    })();
   </script>
 </body>
 </html>
