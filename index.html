@@ -94,11 +94,13 @@
 
     async function explore(path) {
   const entries = await fetchFolderContents(path);
+  const excludeFolders = ['2023', 'commissions']; // folders to skip at root level
+
   for (const entry of entries) {
     if (entry.type === 'dir') {
-      // skip ONLY the '2023' folder at the root of artworks
-      if (!(path === 'assets/artworks' && entry.name === '2023')) {
-        await explore(entry.path); // continue for others
+      // Skip excluded folders only at the top level of 'assets/artworks'
+      if (!(path === 'assets/artworks' && excludeFolders.includes(entry.name))) {
+        await explore(entry.path);
       }
     } else if (entry.type === 'file' && !seen.has(entry.name)) {
       seen.add(entry.name);
