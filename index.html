@@ -94,15 +94,15 @@
 
     async function explore(path) {
       for (const entry of entries) {
-  // 🛑 Skip any folder named '2023'
+  // Skip any folder whose path ends with '/2023'
   if (entry.type === 'dir') {
-    if (entry.name !== '2023') {
-      await explore(entry.path); // recursive for allowed subfolders
+    if (!entry.path.endsWith('/2023')) {
+      await explore(entry.path);
     }
   } else if (entry.type === 'file' && !seen.has(entry.name)) {
     seen.add(entry.name);
     collected.push(entry);
-        }
+  }
       }
     }
 
