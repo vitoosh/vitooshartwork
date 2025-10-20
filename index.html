@@ -93,18 +93,16 @@
     const seen = new Set(); // to avoid duplicates
 
     async function explore(path) {
-      for (const entry of entries) {
-  // Skip any folder whose path ends with '/2023'
-  if (entry.type === 'dir') {
-    if (!entry.path.endsWith('/2023')) {
-      await explore(entry.path);
+  const entries = await fetchFolderContents(path);
+  for (const entry of entries) {
+    if (entry.type === 'dir') {
+      await explore(entry.path); // recursive for subfolders
+    } else if (entry.type === 'file' && !seen.has(entry.name)) {
+      seen.add(entry.name);
+      collected.push(entry);
     }
-  } else if (entry.type === 'file' && !seen.has(entry.name)) {
-    seen.add(entry.name);
-    collected.push(entry);
   }
-      }
-    }
+}
 
     try {
       await explore(rootPath);
