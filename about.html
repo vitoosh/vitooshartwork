@@ -6,84 +6,95 @@
   <title>About — VITOOSH ARTWORKS</title>
   <link rel="stylesheet" href="/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-</head>
   <style>
-.about-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  padding: 80px 20px;
-  min-height: 80vh;
-  background: #fff;
-  color: #111;
-}
+    /* ============ About Page Styles ============ */
+    .about-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 80px 20px;
+      min-height: 80vh;
+      background: #fff;
+      color: #111;
+    }
 
-.about-wrapper {
-  display: flex;
-  align-items: flex-start;
-  gap: 40px;
-  max-width: 1000px;
-  width: 100%;
-}
+    .about-wrapper {
+      display: flex;
+      align-items: flex-start;
+      gap: 40px;
+      max-width: 1000px;
+      width: 100%;
+    }
 
-.profile-img {
-  width: 200px;
-  height: auto;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
+    .profile-img {
+      width: 200px;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
 
-.about-text {
-  flex: 1;
-}
+    .about-text {
+      flex: 1;
+    }
 
-#about-title {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-  font-weight: 700;
-}
+    #about-title {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+    }
 
-#about-name {
-  font-size: 1.2rem;
-  color: #666;
-  margin-bottom: 1rem;
-}
+    #about-name {
+      font-size: 1.2rem;
+      color: #666;
+      margin-bottom: 1rem;
+    }
 
-#about-content {
-  line-height: 1.7;
-  font-size: 1rem;
-  color: #333;
+    #about-content {
+      line-height: 1.7;
+      font-size: 1rem;
+      color: #333;
+    }
 
-  body.about-page main::before,
-  body.about-page .background-text,
-  body.about-page .hero-title {
-  font-size: 6rem !important;
-  opacity: 0.05;
-  top: 100px;
-}
-}
+    /* ============ Fix: Oversized background logo ============ */
+    body.about-page main::before,
+    body.about-page .background-text,
+    body.about-page .hero-title {
+      font-size: 6rem !important;
+      opacity: 0.05;
+      top: 100px;
+    }
+
+    /* Optional: Hide background text completely (uncomment if needed) */
+    /*
+    body.about-page main::before,
+    body.about-page .background-text,
+    body.about-page .hero-title {
+      display: none !important;
+    }
+    */
   </style>
-<body>
-  <header>
+</head>
+<body class="about-page">
+  <header class="header">
     <a href="/index.html"><img id="logo" class="logo" src="/assets/logo/logo.png" alt="VITOOSH Logo"></a>
     <nav>
       <a href="index.html">Projects</a>
-      <a href="about.html">About</a>
+      <a href="about.html" class="active">About</a>
       <a href="contact.html">Contact</a>
     </nav>
   </header>
 
   <main id="about-section" class="about-container">
-  <div class="about-wrapper">
-    <img src="/assets/profile/profile.jpeg" alt="Profile" class="profile-img" id="profile-img" />
-    <div class="about-text">
-      <h1 id="about-title">VITOOSH ARTWORKS</h1>
-      <h2 id="about-name">Adinarwastu Vito Koosnugroho</h2>
-      <div id="about-content"></div>
+    <div class="about-wrapper">
+      <img src="/assets/profile/profile.jpeg" alt="Profile" class="profile-img" id="profile-img" />
+      <div class="about-text">
+        <h1 id="about-title">VITOOSH ARTWORKS</h1>
+        <h2 id="about-name">Adinarwastu Vito Koosnugroho</h2>
+        <div id="about-content"></div>
+      </div>
     </div>
-  </div>
-</main>
+  </main>
 
   <footer>
     <div class="footer-icons">
@@ -97,35 +108,33 @@
   </footer>
 
   <script>
-  async function loadAbout() {
-  try {
-    const res = await fetch('content/about.md');
-    const text = await res.text();
+    async function loadAbout() {
+      try {
+        const res = await fetch('content/about.md');
+        const text = await res.text();
 
-    // Extract front matter
-    const match = text.match(/---([\s\S]*?)---/);
-    const frontMatter = match ? match[1].trim() : '';
-    const body = text.replace(/---([\s\S]*?)---/, '').trim();
+        // Extract front matter
+        const match = text.match(/---([\s\S]*?)---/);
+        const frontMatter = match ? match[1].trim() : '';
+        const body = text.replace(/---([\s\S]*?)---/, '').trim();
 
-    const lines = frontMatter.split('\n').map(line => line.trim());
-    const about = {};
+        const lines = frontMatter.split('\n').map(line => line.trim());
+        const about = {};
 
-    lines.forEach(line => {
-      const [key, value] = line.split(':').map(v => v.trim().replace(/"/g, ''));
-      if (key && value) about[key.toLowerCase()] = value;
-    });
+        lines.forEach(line => {
+          const [key, value] = line.split(':').map(v => v.trim().replace(/"/g, ''));
+          if (key && value) about[key.toLowerCase()] = value;
+        });
 
-    document.getElementById('about-title').textContent = about.vitoosh || 'VITOOSH ARTWORKS';
-    document.getElementById('about-name').textContent = about.adinarwastu || '';
-    document.getElementById('about-content').innerHTML = body;
-  } catch (err) {
-    console.error('Failed to load about.md:', err);
-  }
-}
+        document.getElementById('about-title').textContent = about.vitoosh || 'VITOOSH ARTWORKS';
+        document.getElementById('about-name').textContent = about.adinarwastu || '';
+        document.getElementById('about-content').innerHTML = marked.parse(body);
+      } catch (err) {
+        console.error('Failed to load about.md:', err);
+      }
+    }
 
-loadAbout();
-</script>
-
-
+    loadAbout();
+  </script>
 </body>
 </html>
