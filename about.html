@@ -64,63 +64,60 @@
       opacity: 0.05;
       top: 100px;
     }
-    /* Dropdown Menu */
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
 
-.dropbtn {
-  background: none;
-  border: none;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-  padding: 0;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: white;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px rgba(0,0,0,0.1);
-  z-index: 1;
-}
-
-.dropdown-content a {
-  display: block;
-  padding: 10px 14px;
-  text-decoration: none;
-  color: #111;
-}
-
-.dropdown-content a:hover {
-  background-color: #f1f1f1;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-
-    /* Optional: Hide background text completely (uncomment if needed) */
-    /*
-    body.about-page main::before,
-    body.about-page .background-text,
-    body.about-page .hero-title {
-      display: none !important;
+    /* ============ Dropdown Menu ============ */
+    .dropdown {
+      position: relative;
+      display: inline-block;
     }
-    */
+
+    .dropbtn {
+      background: none;
+      border: none;
+      color: inherit;
+      font: inherit;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: white;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px rgba(0,0,0,0.1);
+      z-index: 1;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .dropdown-content a {
+      display: block;
+      padding: 10px 14px;
+      text-decoration: none;
+      color: #111;
+      font-size: 14px;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #f1f1f1;
+    }
+
+    .dropdown.show .dropdown-content {
+      display: block;
+    }
   </style>
 </head>
+
 <body class="about-page">
   <header class="header">
-    <a href="/index.html"><img id="logo" class="logo" src="/assets/logo/logo.png" alt="VITOOSH Logo"></a>
+    <a href="/index.html">
+      <img id="logo" class="logo" src="/assets/logo/logo.png" alt="VITOOSH Logo">
+    </a>
     <nav>
-      <div class="dropdown" id="projectsDropdown">
-        <div class="dropdown-toggle" id="projectsToggle">Projects ▾</div>
-        <div class="dropdown-menu" id="projectsMenu">
+      <div class="dropdown">
+        <button class="dropbtn" id="projectsButton">Projects ▾</button>
+        <div class="dropdown-content" id="projectsMenu">
           <a href="/projects/commissions.html">Commissions</a>
           <a href="/projects/2025.html">2025</a>
           <a href="/projects/2024.html">2024</a>
@@ -155,12 +152,28 @@
   </footer>
 
   <script>
+    // Dropdown toggle on click
+    const btn = document.getElementById('projectsButton');
+    const menu = document.getElementById('projectsMenu');
+
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      btn.parentElement.classList.toggle('show');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!btn.contains(e.target) && !menu.contains(e.target)) {
+        btn.parentElement.classList.remove('show');
+      }
+    });
+
+    // Load about.md content
     async function loadAbout() {
       try {
         const res = await fetch('content/about.md');
         const text = await res.text();
 
-        // Extract front matter
         const match = text.match(/---([\s\S]*?)---/);
         const frontMatter = match ? match[1].trim() : '';
         const body = text.replace(/---([\s\S]*?)---/, '').trim();
