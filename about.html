@@ -7,6 +7,55 @@
   <link rel="stylesheet" href="/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
+  <style>
+.about-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 80px 20px;
+  min-height: 80vh;
+  background: #fff;
+  color: #111;
+}
+
+.about-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+  max-width: 1000px;
+  width: 100%;
+}
+
+.profile-img {
+  width: 200px;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.about-text {
+  flex: 1;
+}
+
+#about-title {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+#about-name {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+#about-content {
+  line-height: 1.7;
+  font-size: 1rem;
+  color: #333;
+}
+  </style>
 <body>
   <header>
     <a href="/index.html"><img id="logo" class="logo" src="/assets/logo/logo.png" alt="VITOOSH Logo"></a>
@@ -17,11 +66,15 @@
     </nav>
   </header>
 
-  <main id="about-section">
-    <img src="assets/profile/profile.jpeg" alt="Profile" class="profile-img" id="profile-img" />
-    <h1 id="about-title">VITOOSH ARTWORKS</h1>
-    <h2 id="about-name">Adinarwastu Vito Koosnugroho</h2>
-    <div id="about-content"></div>
+  <main id="about-section" class="about-container">
+  <div class="about-wrapper">
+    <img src="/assets/profile/profile.jpeg" alt="Profile" class="profile-img" id="profile-img" />
+    <div class="about-text">
+      <h1 id="about-title">VITOOSH ARTWORKS</h1>
+      <h2 id="about-name">Adinarwastu Vito Koosnugroho</h2>
+      <div id="about-content"></div>
+    </div>
+  </div>
 </main>
 
   <footer>
