@@ -94,7 +94,7 @@
 
     async function explore(path) {
   const entries = await fetchFolderContents(path);
-  const excludeFolders = ['2023', 'commissions']; // folders to skip at root level
+  const excludeFolders = ['2023', 'comissions']; // folders to skip at root level
 
   for (const entry of entries) {
     if (entry.type === 'dir') {
